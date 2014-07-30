@@ -14,23 +14,20 @@ $(document).ready(function() {
     document.body.appendChild(c);
 
     var ctx = c.getContext('2d');
-    ctx.fillStyle = '#FF0000';
+    ctx.lineWidth = "1";
 
     function Point(x, y, vx, vy) {
         this.x = x || 0;
         this.y = y || 0;
         this.vx = vx || 0;
         this.vy = vy || 0;
-        this.color = 'rgb(' +
-            (Math.random() * 255 >> 0) + ',' +
-            (Math.random() * 255 >> 0) + ',' +
-            (Math.random() * 255 >> 0) + ')';
+        this.rgba = [Math.random() * 255 >> 0, Math.random() * 255 >> 0, Math.random() * 255 >> 0, 255];
     }
 
     function Voronoi(size) {
+        this.imgData = ctx.createImageData(WIDTH, HEIGHT);
         this.points = new Array(size || 10);
         this.bitmap = new Array(WIDTH * HEIGHT);
-        console.log(this.points.length); // rm later
         for (var i = 0; i < this.points.length; i++) {
             this.points[i] = new Point(
                 Math.random() * WIDTH + 1,
@@ -51,7 +48,7 @@ $(document).ready(function() {
     }
 
     Voronoi.prototype.checkBounds = function(p) {
-        p.x = p.x > WIDTH ? 0 : p.x < 0 ? WIDTH : p.x;
+        p.x = p.x > WIDTH ? p.x : p.x < 0 ? WIDTH : p.x;
         p.y = p.y > HEIGHT ? 0 : p.y < 0 ? HEIGHT : p.y;
     }
 
@@ -61,20 +58,25 @@ $(document).ready(function() {
     }
 
     Voronoi.prototype.draw = function() {
-        var p;
-        for (var i = 0; i < this.points.length; i++) {
-            p = this.points[i];
-            ctx.fillStyle = p.color;
-            ctx.fillRect(this.points[i].x, this.points[i].y, 2, 2);
-
-        }
+        var color;
+        var index;
 
         for (var wY = 0; wY < HEIGHT; wY++) {
             for (var wX = 0; wX < WIDTH; wX++) {
-                ctx.fillStyle = this.findClosest(wX, wY).color;
-                ctx.fillRect(wX, wY, 1, 1);
+                color = this.findClosest(wX, wY).rgba;
+                index = (wY * WIDTH + wX) * 4;
+                this.imgData.data[index + 0] = color[0];
+                this.imgData.data[index + 1] = color[1];
+                this.imgData.data[index + 2] = color[2];
+                this.imgData.data[index + 3] = color[3];
             }
         }
+        ctx.putImageData(this.imgData, 0, 0);
+        
+        /*ctx.fillStyle = "#000000";
+        for (var i = 0; i < this.points.length; i++) {
+            ctx.fillRect(this.points[i].x, this.points[i].y, 2, 2);
+        }*/
     }
 
     Voronoi.prototype.findClosest = function(x, y) {
@@ -82,24 +84,31 @@ $(document).ready(function() {
         var bestDist = Infinity;
         var closest;
         for (var i = 0; i < this.points.length; i++) {
-            currentDist = Voronoi.distance({ x:x, y:y}, this.points[i]);
-            
-            if(currentDist < bestDist) {
+            currentDist = Voronoi.distance({
+                x: x,
+                y: y
+            }, this.points[i]);
+
+            if (currentDist < bestDist) {
                 bestDist = currentDist;
                 closest = this.points[i];
             }
-
         }
         return closest;
     }
 
     Voronoi.distance = function(a, b) {
-        return (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y)
+
+        // Manhatten Distance
+        // return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+
+        // Euclidean distance
+        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
     }
 
 
     var fps = 60;
-    var test = new Voronoi(100);
+    var test = new Voronoi(25);
 
     function render() {
         setTimeout(function() {
