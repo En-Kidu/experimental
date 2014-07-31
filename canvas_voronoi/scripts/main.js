@@ -72,7 +72,7 @@ $(document).ready(function() {
             }
         }
         ctx.putImageData(this.imgData, 0, 0);
-        
+
         /*ctx.fillStyle = "#000000";
         for (var i = 0; i < this.points.length; i++) {
             ctx.fillRect(this.points[i].x, this.points[i].y, 2, 2);
@@ -100,26 +100,23 @@ $(document).ready(function() {
     Voronoi.distance = function(a, b) {
 
         // Manhatten Distance
-        // return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
         // Euclidean distance
-        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
+        //return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
     }
 
-
+    var test = new Voronoi(20);
     var fps = 60;
-    var test = new Voronoi(25);
 
     function render() {
         setTimeout(function() {
             window.requestAnimationFrame(render);
 
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
             test.update();
             test.draw();
 
         }, 1000 / fps);
     }
     render();
-
 });
