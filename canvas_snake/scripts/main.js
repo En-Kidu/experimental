@@ -71,8 +71,8 @@ $(document).ready(function() {
     Snake.prototype.update = function() {
         this.checkBounds();
         this.wiggle();
-        if (this.left) this.turn(18);
-        if (this.right) this.turn(-18);
+        if (this.left) this.turn(-18);
+        if (this.right) this.turn(18);
 
         this.move();
     }
