@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    background: #fafafa;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+#wall{
+    position: relative;
+    background-color: black;
+}
