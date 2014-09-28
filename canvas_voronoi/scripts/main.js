@@ -100,10 +100,10 @@ $(document).ready(function() {
     Voronoi.distance = function(a, b) {
 
         // Manhatten Distance
-        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        //return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
         // Euclidean distance
-        //return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
+        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
     }
 
     var test = new Voronoi(20);
