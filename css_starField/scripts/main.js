@@ -12,8 +12,9 @@ function Star(layer, id) {
     this.id = this.layer + '' + id;
     this.x = Math.random() * (2 * halfWidth + parallaxFactor * (this.layer * this.layer + 1) * 2 * halfWidth) - (2 * halfWidth + parallaxFactor * (this.layer * this.layer + 1) * 2 * halfWidth) / 2;
     this.y = Math.random() * (2 * halfHeight + parallaxFactor * (this.layer * this.layer + 1) * 2 * halfHeight) - (2 * halfHeight + parallaxFactor * (this.layer * this.layer + 1) * 2 * halfHeight) / 2;
- }
+    this.color = (Math.random() * 255 + 1) << 0;
 
+}
 // populate the star array
 // each column represents a layer, each row a single star in the layer
 for (var f = 0; f < $('.layered').length; f++) {
@@ -34,7 +35,14 @@ $('#wrapper').children().each(function(i, layer) {
             .css('top', stars[i][k].y)
             .css('left', stars[i][k].x)
             .css('width', stars[i][k].size)
-            .css('height', stars[i][k].size);
+            .css('height', stars[i][k].size)
+            .css('background-color',
+                'rgb(' +
+                (255 - ($('.layered').length - i) * 18) +
+                ',' + (255 - ($('.layered').length - i) * 18) +
+                ',' + (255 - ($('.layered').length - i) * 18) +
+                ')'
+        );
     }
 });
 
